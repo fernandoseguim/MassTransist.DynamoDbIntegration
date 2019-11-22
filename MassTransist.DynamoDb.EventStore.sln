@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29509.3
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{349D4CF6-B819-405B-9F2E-CB2C2FF6469C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{89DF8BF8-48D8-4528-9BCF-4BA61213F012}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MassTransist.DynamoDb.EventStore", "src\MassTransist.DynamoDb.EventStore\MassTransist.DynamoDb.EventStore.csproj", "{6DC4FC28-1695-4880-AC15-E31651B1528C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6DC4FC28-1695-4880-AC15-E31651B1528C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DC4FC28-1695-4880-AC15-E31651B1528C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DC4FC28-1695-4880-AC15-E31651B1528C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6DC4FC28-1695-4880-AC15-E31651B1528C}.Debug|x64.Build.0 = Debug|Any CPU
+		{6DC4FC28-1695-4880-AC15-E31651B1528C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6DC4FC28-1695-4880-AC15-E31651B1528C}.Debug|x86.Build.0 = Debug|Any CPU
+		{6DC4FC28-1695-4880-AC15-E31651B1528C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DC4FC28-1695-4880-AC15-E31651B1528C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DC4FC28-1695-4880-AC15-E31651B1528C}.Release|x64.ActiveCfg = Release|Any CPU
+		{6DC4FC28-1695-4880-AC15-E31651B1528C}.Release|x64.Build.0 = Release|Any CPU
+		{6DC4FC28-1695-4880-AC15-E31651B1528C}.Release|x86.ActiveCfg = Release|Any CPU
+		{6DC4FC28-1695-4880-AC15-E31651B1528C}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6DC4FC28-1695-4880-AC15-E31651B1528C} = {349D4CF6-B819-405B-9F2E-CB2C2FF6469C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C486961A-EE5F-4AA0-9B82-95D2319EB083}
+	EndGlobalSection
+EndGlobal
