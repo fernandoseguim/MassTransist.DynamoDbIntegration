@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Description>Event Store implementation in AWS DynamoDb to Masstransit </Description>
+    <Description>Event Store implementation in AWS DynamoDb to Masstransit</Description>
     <Authors>Fernando Seguim</Authors>
-    <AssemblyName>Masstransit.DynamoDb.EventStore</AssemblyName>
-    <PackageId>Masstransit.DynamoDb.EventStore</PackageId>
+    <AssemblyName>MassTransist.DynamoDbIntegration</AssemblyName>
+    <PackageId>MassTransist.DynamoDbIntegration</PackageId>
     <PackageTags>event store;event sourcing;event driven;domain event;dynamodb; masstransit</PackageTags>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
