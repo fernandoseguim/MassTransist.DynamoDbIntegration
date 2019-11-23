@@ -71,7 +71,7 @@ stages:
           arguments: '--configuration $(BuildConfiguration)'
 
       - script: |
-          dotnet pack **/*.csproj --configuration $(BuildConfiguration) /p:VersionPrefix='$(GitVersion.NuGetVersionV2)' --include-symbols --no-build -o '$(build.artifactStagingDirectory)'
+          dotnet pack src/MassTransist.DynamoDbIntegration/MassTransist.DynamoDbIntegration.csproj --configuration $(BuildConfiguration) /p:VersionPrefix='$(GitVersion.NuGetVersionV2)' --include-symbols --no-build -o '$(build.artifactStagingDirectory)'
         displayName: 'Dotnet pack'
 
       - task: NuGetCommand@2
