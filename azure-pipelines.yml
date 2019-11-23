@@ -77,7 +77,7 @@ stages:
           command: 'push'
           packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg;!$(Build.ArtifactStagingDirectory)/*.symbols.nupkg'
           nuGetFeedType: 'external'
-          publishFeedCredentials: 'NuGet'
+          publishFeedCredentials: 'NuGetFeed'
         condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq('true', variables['FORCE_PUSH_NUGET'])))
 
       - task: PublishPipelineArtifact@0
