@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Event Store implementation in AWS DynamoDb to Masstransit </Description>
+    <Authors>Fernando Seguim</Authors>
+    <AssemblyName>Masstransit.DynamoDb.EventStore</AssemblyName>
+    <PackageId>Masstransit.DynamoDb.EventStore</PackageId>
+    <PackageTags>event store;event sourcing;event driven;domain event;dynamodb; masstransit</PackageTags>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="5.5.6" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="5.5.6" />
+    <PackageReference Include="AspNetCore.AsyncInitialization" Version="1.1.2" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.3.100.1" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.101.38" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+
+</Project>
