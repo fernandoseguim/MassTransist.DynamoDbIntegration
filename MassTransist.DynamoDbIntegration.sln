@@ -9,9 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{89DF8BF8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MassTransist.DynamoDbIntegration", "src\MassTransist.DynamoDbIntegration\MassTransist.DynamoDbIntegration.csproj", "{6DC4FC28-1695-4880-AC15-E31651B1528C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MassTransist.DynamoDbIntegration.Tests", "tests\MassTransist.DynamoDbIntegration.Tests\MassTransist.DynamoDbIntegration.Tests.csproj", "{53830569-235D-44CD-ABDF-AF82AFA66084}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MassTransist.DynamoDbIntegration.Tests", "tests\MassTransist.DynamoDbIntegration.Tests\MassTransist.DynamoDbIntegration.Tests.csproj", "{53830569-235D-44CD-ABDF-AF82AFA66084}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{DF34DE49-0CED-4A73-B641-F908BC6AFA0B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{1566EF04-95C5-4FA5-B207-AFC04EC5880C}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker\docker-compose.dcproj", "{DF34DE49-0CED-4A73-B641-F908BC6AFA0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +68,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{6DC4FC28-1695-4880-AC15-E31651B1528C} = {349D4CF6-B819-405B-9F2E-CB2C2FF6469C}
 		{53830569-235D-44CD-ABDF-AF82AFA66084} = {89DF8BF8-48D8-4528-9BCF-4BA61213F012}
+		{DF34DE49-0CED-4A73-B641-F908BC6AFA0B} = {1566EF04-95C5-4FA5-B207-AFC04EC5880C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C486961A-EE5F-4AA0-9B82-95D2319EB083}
