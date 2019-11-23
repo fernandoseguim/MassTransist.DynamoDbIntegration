@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  masstransist.dynamodbintegration.tests:
+    image: ${DOCKER_REGISTRY-}masstransistdynamodbintegrationtests
+    build:
+      context: .
+      dockerfile: tests/MassTransist.DynamoDbIntegration.Tests/Dockerfile
+    depends_on:
+      - rabbit
+      - dynamodb
+  rabbit:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  dynamodb:
+    image: amazon/dynamodb-local
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      AWS_ACCESS_KEY_ID: root
+      AWS_SECRET_ACCESS_KEY: secret
