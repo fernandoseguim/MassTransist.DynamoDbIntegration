@@ -74,14 +74,12 @@ stages:
           dotnet pack src/MassTransist.DynamoDbIntegration/MassTransist.DynamoDbIntegration.csproj --configuration $(BuildConfiguration) /p:VersionPrefix='$(GitVersion.NuGetVersionV2)' --include-symbols --no-build -o '$(build.artifactStagingDirectory)'
         displayName: 'Dotnet pack'
 
-      - task: NuGetCommand@2
-        displayName: 'Push package to internal feed'
+      - task: DotNetCoreCLI@2
         inputs:
           command: 'push'
-          packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+          packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
           nuGetFeedType: 'internal'
           publishVstsFeed: 'f85156e6-da44-41e1-a77f-d5e43fdc6a4e'
-          allowPackageConflicts: true
 
       - task: NuGetCommand@2
         displayName: 'Push package to nuget.org feed'
