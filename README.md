@@ -1,1 +1,1 @@
-# MassTransist.DynamoDb.EventStore
+# MassTransist.DynamoDbIntegration
