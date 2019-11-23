@@ -1,0 +1,86 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+variables:
+  BuildConfiguration: Release
+  FORCE_PUSH_NUGET: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}
+
+trigger:
+  branches:
+    include:
+    - master
+    - develop
+  paths:
+    include:
+    - src/*
+    - test/*
+    - azure-pipelines.yml
+
+stages:
+- stage: Build
+  jobs:
+    - job: Build
+      displayName: Build Artifacts
+      pool:
+        vmImage: 'ubuntu-latest'
+
+      steps:
+      - task: GitVersion@5
+        displayName: 'Define git version'
+        inputs:
+          updateAssemblyInfo: true
+          preferBundledVersion: false
+
+      - script: echo '%Action%%BuildVersion%'
+        displayName: 'Set build version'
+        env:
+          Action: '##vso[build.updatebuildnumber]'
+          BuildVersion: $(GitVersion.SemVer)
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Dotnet restore'
+        inputs:
+          command: restore
+          projects: '**/*.csproj'
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Dotnet build'
+        inputs:
+          projects: '**/*.csproj'
+          arguments: '--configuration $(BuildConfiguration) /p:Version=$(GitVersion.NuGetVersionV2)'
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Dotnet test'
+        inputs:
+          command: test
+          projects: '**/*[Tt]est*/*.csproj'
+          arguments: '--configuration $(BuildConfiguration)'
+
+      - script: |
+          dotnet pack **/*.csproj --configuration $(BuildConfiguration) /p:VersionPrefix='$(GitVersion.NuGetVersionV2)' --include-symbols --no-build -o '$(build.artifactStagingDirectory)'
+        displayName: 'Dotnet pack'
+
+      - task: NuGetCommand@2
+        displayName: 'Push package to internal feed'
+        inputs:
+          command: 'push'
+          packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+          nuGetFeedType: 'internal'
+          publishVstsFeed: 'f85156e6-da44-41e1-a77f-d5e43fdc6a4e'
+          allowPackageConflicts: true
+
+      - task: NuGetCommand@2
+        displayName: 'Push package to nuget.org feed'
+        inputs:
+          command: 'push'
+          packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg;!$(Build.ArtifactStagingDirectory)/*.symbols.nupkg'
+          nuGetFeedType: 'external'
+          publishFeedCredentials: 'NuGet'
+        condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq('true', variables['FORCE_PUSH_NUGET'])))
+
+      - task: PublishPipelineArtifact@0
+        inputs:
+          artifactName: 'build-assets'
+          targetPath: '$(Build.ArtifactStagingDirectory)'
