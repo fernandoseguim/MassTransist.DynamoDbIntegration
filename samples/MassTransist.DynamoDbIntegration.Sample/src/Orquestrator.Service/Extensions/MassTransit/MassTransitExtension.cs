@@ -45,9 +45,7 @@ namespace Orquestrator.Saga.Extensions.MassTransit
             {
                 storeOptions.BillingMode = BillingMode.PAY_PER_REQUEST;
                 storeOptions.Region = RegionEndpoint.USEast1;
-                storeOptions.Credentials = new SessionAWSCredentials("ASIA47PSP45XQ4NUYOOV",
-                        "9kSZdUd1392FXQpI6OzwrG20PjYOwBSnPRektAb0",
-                        "IQoJb3JpZ2luX2VjEPf//////////wEaCXVzLWVhc3QtMSJGMEQCIB3eB55m1q4Rt0mfHgNV9BUS2kNjia6ryJlJxdPqNiV4AiAXvXy9m+gpWLuWId0S86PZV2pdPrZ/J2Y2pf3JScpVtyqRAggwEAAaDDg5MjI1MTEzNzkwMyIMw1idW+WB4LhpeW7xKu4Be7qqauXRwRxP8Rfx1BUS1SyWACr43zr5WrHetDzttoJdq66+KX7n87ffM4HMERH+yPF6L663//WDDI7dj5GDJalQUTbdnYlb3npRuL3juCv0sngX7gz5XtnJIHJHbiPGr72c6BbKogW7jujdO2e/fwL3mVA2dlJ4czzZ902jQaTs3neozz7aB6/P5jT1Ys9gLeFaAjwjfxKpS68MIGu5Y24n0oUCjm0pOqddB9oSuGLtct9SB6LwDcxJOEnx4uFlyZmGyp0QqGwx8z4dCGvEduJeB14OwwnKlx7qBT2CZtJFlB4Rc54NmJWUcqQ48zCdguXuBTrqAZHu07IdMNaP9mP8msnIVSLbViQHUgyl4h6b0kdLBdQ4xC+y137MY1vHLb1jNoxVer2ikODggzUv4JTlZ0gPSiTNWBTapMmiaDLYCpPe7PQcQK9DFzFFmU/F8RjRxrrHbc39Xl7jyAWNKdC2P+DPfmgX5p1qnwl55mITRsqi+1oOjRBHSHh09y5YrC3H6eMu6P3meKhnn5Kbhpe/4NABwNJ9X1b0KE33vKOAdp9frt54L28EPfr5582iKrSwBTOYXBIQed0Rva0/OhJdsydkQpnpktTInoGqF4Kmt+74wzKGg8StV/jNNZCN2A==");
+                storeOptions.Credentials = new SessionAWSCredentials("AWS_ACCESS_KEY", "AWS_SECRET_KEY", "AWS_SESSION_TOKEN");
             });
 
             services.AddMassTransit(configure =>
