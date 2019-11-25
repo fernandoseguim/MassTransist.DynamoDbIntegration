@@ -1,12 +1,12 @@
 using System;
 using Automatonymous;
 using Microsoft.Extensions.Logging;
-using Orquestrator.Saga.Contracts.Commands;
-using Orquestrator.Saga.Contracts.Events;
-using Orquestrator.Saga.Sagas;
+using Orquestrator.Service.Contracts.Commands;
+using Orquestrator.Service.Contracts.Events;
+using Orquestrator.Service.Sagas;
 using SagaState = Automatonymous.State;
 
-namespace Orquestrator.Saga.StateMachines
+namespace Orquestrator.Service.StateMachines
 {
     public sealed class BankDepositTransactionStateMachine : MassTransitStateMachine<BankDepositTransactionInstance>
     {
@@ -16,7 +16,7 @@ namespace Orquestrator.Saga.StateMachines
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-            Name("CREATE_BANK_DEPOSIT_TRANSACTION");
+            Name("BANK_DEPOSIT_TRANSACTION");
             InstanceState(saga => saga.CurrentState);
 
             Event(() => BankDepositTransactionWasReceived, @event => @event.CorrelateById(context => context.Message.CorrelationId).SelectId(selector => selector.Message.CorrelationId));

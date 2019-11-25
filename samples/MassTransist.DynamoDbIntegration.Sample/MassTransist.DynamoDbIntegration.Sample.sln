@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E97FF4BF-33E8-4D11-8FA9-1ED9289A9A4B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orquestrator.Saga.Contracts", "src\Orquestrator.Contracts\Orquestrator.Saga.Contracts.csproj", "{F9BDEBB6-55D9-42F3-935B-49CFCB2204CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orquestrator.Service.Contracts", "src\Orquestrator.Contracts\Orquestrator.Service.Contracts.csproj", "{F9BDEBB6-55D9-42F3-935B-49CFCB2204CC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MassTransist.DynamoDbIntegration", "..\..\src\MassTransist.DynamoDbIntegration\MassTransist.DynamoDbIntegration.csproj", "{6E6E5A2F-8724-4232-A3CF-A66C131A1656}"
 EndProject
@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Limit.Service", "src\Limit.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entrypoint.Service", "src\Entrypoint.Service\Entrypoint.Service.csproj", "{BE0DA1DA-203A-446D-AD16-A5A12E5775AE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orquestrator.Saga", "src\Orquestrator.Service\Orquestrator.Saga.csproj", "{5C05E986-32BB-4E4C-8B51-1ACB5618330F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orquestrator.Service", "src\Orquestrator.Service\Orquestrator.Service.csproj", "{5C05E986-32BB-4E4C-8B51-1ACB5618330F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

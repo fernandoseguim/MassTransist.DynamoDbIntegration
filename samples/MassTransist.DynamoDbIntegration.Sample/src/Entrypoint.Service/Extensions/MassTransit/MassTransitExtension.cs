@@ -5,7 +5,7 @@ using System.Linq;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Orquestrator.Saga.Contracts;
+using Orquestrator.Service.Contracts;
 
 namespace Entrypoint.Service.Extensions.MassTransit
 {

@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orquestrator.Contracts\Orquestrator.Saga.Contracts.csproj" />
+    <ProjectReference Include="..\Orquestrator.Contracts\Orquestrator.Service.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

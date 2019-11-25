@@ -1,13 +1,10 @@
-using System.Collections.Generic;
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Orquestrator.Saga.Contracts.Events;
 using Serilog;
 using Serilog.Exceptions;
 
-namespace Orquestrator.Saga
+namespace Orquestrator.Service
 {
     public class Program
     {
