@@ -2,8 +2,8 @@ using System;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.Extensions.Logging;
-using Orquestrator.Saga.Contracts.Commands;
-using Orquestrator.Saga.Contracts.Events;
+using Orquestrator.Service.Contracts.Commands;
+using Orquestrator.Service.Contracts.Events;
 
 namespace Clearing.Service.Consumers
 {

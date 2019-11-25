@@ -1,4 +1,4 @@
-namespace Orquestrator.Saga.Contracts
+namespace Orquestrator.Service.Contracts
 {
     public class BrokerSettings
     {

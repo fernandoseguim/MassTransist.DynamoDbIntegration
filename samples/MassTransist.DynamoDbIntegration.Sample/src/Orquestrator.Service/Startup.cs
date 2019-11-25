@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Orquestrator.Saga.Extensions.MassTransit;
+using Orquestrator.Service.Extensions.MassTransit;
 
-namespace Orquestrator.Saga
+namespace Orquestrator.Service
 {
     public class Startup
     {

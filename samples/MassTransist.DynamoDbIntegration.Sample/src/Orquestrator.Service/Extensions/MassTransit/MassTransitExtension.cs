@@ -2,22 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
 using Amazon;
 using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
 using Amazon.Runtime;
 using MassTransist.DynamoDbIntegration;
 using MassTransist.DynamoDbIntegration.Saga;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Orquestrator.Saga.Contracts;
-using Orquestrator.Saga.Contracts.Events;
-using Orquestrator.Saga.Sagas;
-using Orquestrator.Saga.StateMachines;
+using Orquestrator.Service.Contracts;
+using Orquestrator.Service.Contracts.Events;
+using Orquestrator.Service.Sagas;
+using Orquestrator.Service.StateMachines;
 
-namespace Orquestrator.Saga.Extensions.MassTransit
+namespace Orquestrator.Service.Extensions.MassTransit
 {
     [ExcludeFromCodeCoverage]
     public static class MassTransitExtension

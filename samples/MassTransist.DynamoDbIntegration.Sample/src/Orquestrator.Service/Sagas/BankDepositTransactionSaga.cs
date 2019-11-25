@@ -1,9 +1,9 @@
 using System;
 using Automatonymous;
 using MassTransist.DynamoDbIntegration.Saga;
-using Orquestrator.Saga.Contracts.Events;
+using Orquestrator.Service.Contracts.Events;
 
-namespace Orquestrator.Saga.Sagas
+namespace Orquestrator.Service.Sagas
 {
     public class BankDepositTransactionInstance : EventSourcedSagaInstance, SagaStateMachineInstance
     {
