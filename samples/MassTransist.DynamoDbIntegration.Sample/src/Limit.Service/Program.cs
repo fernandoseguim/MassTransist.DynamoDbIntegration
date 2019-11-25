@@ -7,8 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Orquestrator.Saga.Contracts;
-using Orquestrator.Saga.Contracts.Commands;
+using Orquestrator.Service.Contracts;
+using Orquestrator.Service.Contracts.Commands;
 using Serilog;
 
 namespace Limit.Service

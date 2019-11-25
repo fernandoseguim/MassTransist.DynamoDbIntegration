@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using Orquestrator.Saga.Contracts.Events;
+using Orquestrator.Service.Contracts.Events;
 
 namespace Entrypoint.Service.Controllers
 {

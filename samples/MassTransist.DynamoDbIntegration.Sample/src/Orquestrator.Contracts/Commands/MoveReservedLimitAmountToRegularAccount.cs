@@ -1,7 +1,7 @@
 using System;
 using MassTransit;
 
-namespace Orquestrator.Saga.Contracts.Commands
+namespace Orquestrator.Service.Contracts.Commands
 {
     public class MoveReservedLimitAmountToRegularAccount : CorrelatedBy<Guid>
     {
