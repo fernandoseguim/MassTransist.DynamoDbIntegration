@@ -31,14 +31,13 @@ namespace MassTransist.DynamoDbIntegration
             var knownEventTypes = provider.GetService<KnownEventTypes>();
 
             if(knownEventTypes is null) throw new InvalidOperationException("Known events types should be registered before register saga repository. Consider use RegisterKnownEventsTypes(params Type[] knownEvetTypes)");
-            var client = new AmazonDynamoDBClient(options.Credentials, options.Region);
 
-            //TODO: change by services.AddAWSService<IAmazonDynamoDB>(options);
-            services.AddSingleton<IAmazonDynamoDB>(client);
+            services.AddAWSService<IAmazonDynamoDB>(options);
             
             services.AddSingleton<IDynamoDbEventStoreDatabaseContext, DynamoDbEventStoreDatabaseContext>();
             services.AddAsyncInitializer<DynamoDbEventStoreDatabaseContextInitializer>();
 
+            var client = services.BuildServiceProvider().GetService<IAmazonDynamoDB>();
             var repository = new DynamoDbSagaRepository<TSaga>(new DynamoDBContext(client), options, knownEventTypes);
             services.AddSingleton<DynamoDbSagaRepository<TSaga>>(repository);
         }
