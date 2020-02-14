@@ -8,4 +8,4 @@ This project is inspired by [Masstransit.RedisIntegration](https://github.com/Ma
 
 This is an unstable version and your use  it is at your own risk.
 
-...this documentation will be updated soon
+...this documentation will be updated soon.
