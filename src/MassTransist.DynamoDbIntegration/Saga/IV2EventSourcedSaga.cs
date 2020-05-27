@@ -3,7 +3,7 @@ using MassTransit.Saga;
 
 namespace MassTransist.DynamoDbIntegration.Saga
 {
-    public interface IEventSourcedSaga : ISaga
+    public interface IV2EventSourcedSaga : ISaga
     {
         string StreamName { get; }
 
@@ -28,11 +28,13 @@ namespace MassTransist.DynamoDbIntegration.Saga
         /// Gets the state changes applied to this instance.
         /// </summary>
         /// <returns>A list of recorded state changes.</returns>
-        object[] GetChanges();
+        V2EventStoreModel[] GetChanges();
 
         /// <summary>
         /// Clears the state changes.
         /// </summary>
         void ClearChanges();
+
+        bool Finalized();
     }
 }
