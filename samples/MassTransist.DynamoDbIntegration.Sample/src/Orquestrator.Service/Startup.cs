@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Orquestrator.Service.Extensions.MassTransit;
+using Orchestrator.Service.Extensions.MassTransit;
+using Orchestrator.Service.Extensions.Swagger;
+using Orchestrator.Service.Extensions.Versioning;
 
-namespace Orquestrator.Service
+namespace Orchestrator.Service
 {
     public class Startup
     {
@@ -21,23 +24,20 @@ namespace Orquestrator.Service
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddMassTransitWithRabbitMq(Configuration);
+            services.AddVersioning();
+            services.AddSwaggerDocumentation();
             //services.AddTransient<IAnalyzeBankDepositTransactionPublisher, AnalyzeBankDepositTransactionPublisher>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider versionDescriptionProvider)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
 
-            app.UseHttpsRedirection();
+            app.UseSwagger(versionDescriptionProvider);
             app.UseMvc();
         }
     }
