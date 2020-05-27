@@ -7,4 +7,9 @@ namespace MassTransist.DynamoDbIntegration.Saga
     {
         Task<TSaga> GetSaga(Guid correlationId);
     }
+
+    public interface IV2RetrieveSagaFromRepository<TSaga> where TSaga: IV2EventSourcedSaga
+    {
+        Task<TSaga> GetSaga(Guid correlationId);
+    }
 }
