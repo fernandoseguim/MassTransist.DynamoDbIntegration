@@ -16,5 +16,9 @@ namespace MassTransist.DynamoDbIntegration.DatabaseContext
         /// Optional: Set a billing mode to DynamoDb table usage. Default value as PAY_PER_REQUEST
         /// </summary>
         public BillingMode BillingMode { get; set; } = BillingMode.PAY_PER_REQUEST;
+
+        public bool DeleteWhenCompleted { get; set; }
+
+        public bool SaveFinalState { get;set; } = true;
     }
 }

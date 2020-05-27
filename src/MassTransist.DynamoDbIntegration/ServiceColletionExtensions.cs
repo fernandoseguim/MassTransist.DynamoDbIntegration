@@ -43,14 +43,51 @@ namespace MassTransist.DynamoDbIntegration
         }
 
         /// <summary>
+        /// Configure DynamoDb saga repository 
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configureOptions"></param>
+        /// <param name="configureContext"></param>
+        public static void AddV2DynamoDbEventStore<TSaga>(this IServiceCollection services,
+                                                          Action<DynamoDbEventStoreOptions> configureOptions = null,
+                                                          Action<DynamoDBContextConfig> configureContext = null) where TSaga : class, IV2EventSourcedSaga
+        {
+            var options = new DynamoDbEventStoreOptions();
+            configureOptions?.Invoke(options);
+
+            var name = typeof(TSaga).Name;
+            if(options.StoreName is null) { options.StoreName = $"MassTransist.DynamoDbIntegration.{name}"; }
+
+            services.AddSingleton(options);
+            var provider = services.BuildServiceProvider();
+
+            var knownEventTypes = provider.GetService<KnownEventTypes>();
+
+            if(knownEventTypes is null) throw new InvalidOperationException("Known events types should be registered before register saga repository. Use RegisterKnownEventsTypes(params Type[] knownEventTypes)");
+
+            services.AddAWSService<IAmazonDynamoDB>(options);
+
+            services.AddSingleton<IDynamoDbEventStoreDatabaseContext, V2DynamoDbEventStoreDatabaseContext>();
+            services.AddAsyncInitializer<V2DynamoDbEventStoreDatabaseContextInitializer>();
+
+            var client = services.BuildServiceProvider().GetService<IAmazonDynamoDB>();
+
+            var configuration = new DynamoDBContextConfig();
+            configureContext?.Invoke(configuration);
+
+            var repository = new V2DynamoDbSagaRepository<TSaga>(new DynamoDBContext(client, configuration), options, knownEventTypes);
+            services.AddSingleton<V2DynamoDbSagaRepository<TSaga>>(repository);
+        }
+
+        /// <summary>
         /// Register known events types that will be used during saga orquestration
         /// </summary>
         /// <param name="services"></param>
         /// <param name="knownEvetTypes"></param>
-        public static void RegisterKnownEventsTypes(this IServiceCollection services, params Type[] knownEvetTypes)
+        public static void RegisterKnownEventsTypes(this IServiceCollection services, params Type[] knownEventTypes)
         {
             var knownTypes = new KnownEventTypes();
-            knownTypes.RegisterTypes(knownEvetTypes);
+            knownTypes.RegisterTypes(knownEventTypes);
             services.AddSingleton<KnownEventTypes>(knownTypes);
         }
     }
