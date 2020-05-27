@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Orchestrator.Service.Contracts</AssemblyName>
+    <RootNamespace>Orchestrator.Service.Contracts</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit.Automatonymous" Version="5.5.6" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="5.5.6" />
+    <PackageReference Include="MassTransit.SerilogIntegration" Version="5.5.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\MassTransist.DynamoDbIntegration\MassTransist.DynamoDbIntegration.csproj" />
+  </ItemGroup>
+
+</Project>

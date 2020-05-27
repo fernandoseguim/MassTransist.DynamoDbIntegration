@@ -1,19 +1,19 @@
 using System;
 using Automatonymous;
 using MassTransist.DynamoDbIntegration.Saga;
-using Orquestrator.Service.Contracts.Events;
+using Orchestrator.Service.Contracts.Events;
 
-namespace Orquestrator.Service.Sagas
+namespace Orchestrator.Service.Sagas
 {
-    public class BankDepositTransactionInstance : EventSourcedSagaInstance, SagaStateMachineInstance
+    public class BankDepositTransactionInstance : V2EventSourcedSagaInstance, SagaStateMachineInstance
     {
         public BankDepositTransactionInstance(Guid correlationId) : this() => CorrelationId = correlationId;
 
         private BankDepositTransactionInstance()
         {
-            Register<BankDepositTransactionWasReceived>(x =>
+            Register<FundTransferWasReceived>(x =>
             {
-                CashInTransactionId = x.CashInTransactionId;
+                AuthenticationCode = x.AuthenticationCode;
                 Document = x.Document;
                 Company = x.Company;
                 BankBranch = x.BankBranch;
@@ -21,18 +21,25 @@ namespace Orquestrator.Service.Sagas
                 Amount = x.Amount;
                 Channel = x.Channel;
             });
-            Register<BankDepositTransactionWasApproved>(x =>
+            Register<FundTransferWasApproved>(x =>
             {
-                Status = x.Status;
+                StartedAt = x.Date;
             });
-            Register<ReservedLimitAmountWasMovedToRegularAccount>(x =>
+
+            Register<AmountWasReserved>(x =>
             {
                 ReservedAmount = x.ReservedAmount;
             });
+
+            Register<FundTransferWasCompleted>(x =>
+            {
+                EndedAt = x.Date;
+            });
         }
 
-        public string Status { get; private set; }
-        public string CashInTransactionId { get; private set; }
+        public DateTime StartedAt { get; private set; }
+        public DateTime EndedAt { get; private set; }
+        public Guid AuthenticationCode { get; private set; }
         public string Document { get; private set; }
         public string Company { get; private set; }
         public string BankBranch { get; private set; }

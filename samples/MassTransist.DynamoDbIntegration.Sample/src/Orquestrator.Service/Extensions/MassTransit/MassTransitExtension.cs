@@ -5,17 +5,19 @@ using System.Linq;
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Runtime;
+using AutoMapper;
 using MassTransist.DynamoDbIntegration;
 using MassTransist.DynamoDbIntegration.Saga;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Orquestrator.Service.Contracts;
-using Orquestrator.Service.Contracts.Events;
-using Orquestrator.Service.Sagas;
-using Orquestrator.Service.StateMachines;
+using Orchestrator.Service.Consumers;
+using Orchestrator.Service.Contracts;
+using Orchestrator.Service.Contracts.Events;
+using Orchestrator.Service.Sagas;
+using Orchestrator.Service.StateMachines;
 
-namespace Orquestrator.Service.Extensions.MassTransit
+namespace Orchestrator.Service.Extensions.MassTransit
 {
     [ExcludeFromCodeCoverage]
     public static class MassTransitExtension
@@ -31,23 +33,32 @@ namespace Orquestrator.Service.Extensions.MassTransit
             var brokerSettings = new BrokerSettings();
             configuration.GetSection("BrokerSettings").Bind(brokerSettings);
 
+            services.AddAutoMapper(typeof(Startup).Assembly);
             services.AddSingleton<BankDepositTransactionStateMachine>();
             services.RegisterKnownEventsTypes(
                     typeof(BankDepositTransactionInstance),
-                    typeof(BankDepositTransactionWasApproved),
-                    typeof(BankDepositTransactionWasReceived),
-                    typeof(ReservedLimitAmountWasMovedToRegularAccount),
-                    typeof(CustomerBankDepositLimitAmountWasReserved));
+                    typeof(FundTransferWasApproved),
+                    typeof(FundTransferWasReceived),
+                    typeof(AmountWasReserved),
+                    typeof(FundTransferWasCompleted));
 
-            services.AddDynamoDbEventStore<BankDepositTransactionInstance>(storeOptions =>
+            services.AddV2DynamoDbEventStore<BankDepositTransactionInstance>(storeOptions =>
             {
                 storeOptions.BillingMode = BillingMode.PAY_PER_REQUEST;
                 storeOptions.Region = RegionEndpoint.USEast1;
-                storeOptions.Credentials = new SessionAWSCredentials("AWS_ACCESS_KEY", "AWS_SECRET_KEY", "AWS_SESSION_TOKEN");
+                storeOptions.Credentials = new SessionAWSCredentials("", "", "");
+            }, config =>
+            {
+                config.ConsistentRead = true;
+                config.Conversion = DynamoDBEntryConversion.V2;
             });
 
             services.AddMassTransit(configure =>
             {
+                configure.AddConsumer<AnalyzeBankDepositTransactionRequestConsumer>();
+                configure.AddConsumer<ReserveAmountCommandConsumer>();
+                configure.AddConsumer<CompleteFundTransferCommandConsumer>();
+
                 configure.AddSaga<BankDepositTransactionInstance>();
                 configure.AddBus(provider => Bus.Factory.CreateUsingRabbitMq(configureBus =>
                 {
@@ -57,13 +68,27 @@ namespace Orquestrator.Service.Extensions.MassTransit
                         configureHost.Password(brokerSettings.Password);
                     });
 
-
-                    configureBus.ReceiveEndpoint(host, brokerSettings.InputQueue, configureEndpoint =>
+                    configureBus.ReceiveEndpoint(host, brokerSettings.Input, configureEndpoint =>
                     {
                         var machine = provider.GetService<BankDepositTransactionStateMachine>();
-                        var repository = provider.GetService<DynamoDbSagaRepository<BankDepositTransactionInstance>>();
-                        
+                        var repository = provider.GetService<V2DynamoDbSagaRepository<BankDepositTransactionInstance>>();
+
                         configureEndpoint.StateMachineSaga(machine, repository);
+                    });
+
+                    configureBus.ReceiveEndpoint(host, "reserve_amount", configureEndpoint =>
+                    {
+                        configureEndpoint.Consumer<ReserveAmountCommandConsumer>(provider);
+                    });
+
+                    configureBus.ReceiveEndpoint(host, "analyze_fund_transfer", configureEndpoint =>
+                    {
+                        configureEndpoint.Consumer<AnalyzeBankDepositTransactionRequestConsumer>(provider);
+                    });
+
+                    configureBus.ReceiveEndpoint(host, "complete_fund_transfer", configureEndpoint =>
+                    {
+                        configureEndpoint.Consumer<CompleteFundTransferCommandConsumer>(provider);
                     });
 
                     configureBus.UseInMemoryOutbox();

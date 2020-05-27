@@ -1,12 +1,13 @@
 using System;
 using Automatonymous;
+using MassTransit;
 using Microsoft.Extensions.Logging;
-using Orquestrator.Service.Contracts.Commands;
-using Orquestrator.Service.Contracts.Events;
-using Orquestrator.Service.Sagas;
+using Orchestrator.Service.Contracts.Commands;
+using Orchestrator.Service.Contracts.Events;
+using Orchestrator.Service.Sagas;
 using SagaState = Automatonymous.State;
 
-namespace Orquestrator.Service.StateMachines
+namespace Orchestrator.Service.StateMachines
 {
     public sealed class BankDepositTransactionStateMachine : MassTransitStateMachine<BankDepositTransactionInstance>
     {
@@ -17,68 +18,47 @@ namespace Orquestrator.Service.StateMachines
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             Name("BANK_DEPOSIT_TRANSACTION");
+            
             InstanceState(saga => saga.CurrentState);
-
-            Event(() => BankDepositTransactionWasReceived, @event => @event.CorrelateById(context => context.Message.CorrelationId).SelectId(selector => selector.Message.CorrelationId));
-            Event(() => BankDepositTransactionWasApproved, @event => @event.CorrelateById(context => context.Message.CorrelationId));
-            Event(() => CustomerBankDepositLimitAmountWasReserved, @event => @event.CorrelateById(context => context.Message.CorrelationId));
-            Event(() => ReservedLimitAmountWasMovedToRegularAccount, @event => @event.CorrelateById(context => context.Message.CorrelationId));
+            
+            Event(() => FundTransferWasReceived, @event => @event.CorrelateById(context => context.Message.CorrelationId).SelectId(selector => selector.Message.AuthenticationCode));
+            Event(() => FundTransferWasApproved, @event => @event.CorrelateById(context => context.Message.CorrelationId));
+            Event(() => AmountWasReserved, @event => @event.CorrelateById(context => context.Message.CorrelationId));
+            Event(() => FundTransferWasCompleted, @event => @event.CorrelateById(context => context.Message.CorrelationId));
             
             Initially(
-                When(BankDepositTransactionWasReceived)
+                When(FundTransferWasReceived)
                     .Then(context => context.Instance.Apply(context.Data))
-                    .Then(context => _logger.LogInformation($"Bank deposit transaction to {context.Data.CorrelationId} was received"))
-                    .ThenAsync(async context =>
-                    {
-                        var endpoint = await context.GetSendEndpoint(new Uri("rabbitmq://localhost/core-antifraud-queue"));
-                        await endpoint.Send<AnalyzeBankDepositTransactionRequest>(new AnalyzeBankDepositTransactionRequest {CorrelationId = context.Data.CorrelationId});
-                    })
-                    .TransitionTo(Processing)
+                    .PublishAsync(context => context.Init<AnalyzeFundTransferCommand>(new { context.Instance.CorrelationId }))
                     .TransitionTo(AwaitingRiskAnalysis));
 
-            During(Processing, AwaitingRiskAnalysis,
-                    When(BankDepositTransactionWasApproved)
+            During(AwaitingRiskAnalysis,
+                    When(FundTransferWasApproved)
                         .Then(context => context.Instance.Apply(context.Data))
-                        .Then(context => _logger.LogInformation($"Bank deposit transaction to {context.Data.CorrelationId} was approved"))
-                        .ThenAsync(async context =>
-                        {
-                            var endpoint = await context.GetSendEndpoint(new Uri("rabbitmq://localhost/core-limit-queue"));
-                            await endpoint.Send<ReserveCustomerBankDepositLimitAmount>(new ReserveCustomerBankDepositLimitAmount{ CorrelationId = context.Data.CorrelationId });
-                        })
-                        .TransitionTo(AwaitingLimitReserve));
+                        .PublishAsync(context => context.Init<ReserveAmountCommand>(new { context.Instance.CorrelationId }))
+                        .TransitionTo(AwaitingReserveAmount));
 
-            During(Processing, AwaitingLimitReserve,
-                When(CustomerBankDepositLimitAmountWasReserved)
+            During(AwaitingReserveAmount,
+                When(AmountWasReserved)
                         .Then(context => context.Instance.Apply(context.Data))
-                        .Then(context => _logger.LogInformation($"Bank deposit amount limit to {context.Data.CorrelationId} was reserved"))
-                        .ThenAsync(async context =>
-                        {
-                            var endpoint = await context.GetSendEndpoint(new Uri("rabbitmq://localhost/core-account-queue"));
-                            await endpoint.Send<MoveReservedLimitAmountToRegularAccount>(new MoveReservedLimitAmountToRegularAccount { CorrelationId = context.Data.CorrelationId });
-                        })
-                        .TransitionTo(AwaitingMovingAmountToRegularAccount));
+                        .PublishAsync(context => context.Init<CompleteFundTransferCommand>(new { context.Instance.CorrelationId }))
+                        .TransitionTo(AwaitingCompleteFundTransfer));
 
-            During(Processing, AwaitingMovingAmountToRegularAccount,
-                When(ReservedLimitAmountWasMovedToRegularAccount)
+            During(AwaitingCompleteFundTransfer,
+                When(FundTransferWasCompleted)
                     .Then(context => context.Instance.Apply(context.Data))
-                    .Then(context => _logger.LogInformation($"Reserved limit amount to {context.Data.CorrelationId} was moved to regular account"))
                     .Finalize());
 
-            //SetCompletedWhenFinalized();
+            SetCompletedWhenFinalized();
         }
-
         
-        //public SagaState Processing { get; private set; }
-        public SagaState Processing { get; private set; }
-        public SagaState Done { get; private set; }
-
         public SagaState AwaitingRiskAnalysis { get; private set; }
-        public SagaState AwaitingLimitReserve { get; private set; }
-        public SagaState AwaitingMovingAmountToRegularAccount { get; private set; }
+        public SagaState AwaitingReserveAmount { get; private set; }
+        public SagaState AwaitingCompleteFundTransfer { get; private set; }
         
-        public Event<BankDepositTransactionWasReceived> BankDepositTransactionWasReceived { get; private set; }
-        public Event<BankDepositTransactionWasApproved> BankDepositTransactionWasApproved { get; private set; }
-        public Event<CustomerBankDepositLimitAmountWasReserved> CustomerBankDepositLimitAmountWasReserved { get; private set; }
-        public Event<ReservedLimitAmountWasMovedToRegularAccount> ReservedLimitAmountWasMovedToRegularAccount { get; private set; }
+        public Event<FundTransferWasReceived> FundTransferWasReceived { get; private set; }
+        public Event<AmountWasReserved> AmountWasReserved { get; private set; }
+        public Event<FundTransferWasApproved> FundTransferWasApproved { get; private set; }
+        public Event<FundTransferWasCompleted> FundTransferWasCompleted { get; private set; }
     }
 }

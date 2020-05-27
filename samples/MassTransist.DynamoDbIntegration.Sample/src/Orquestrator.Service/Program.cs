@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Serilog;
 using Serilog.Exceptions;
 
-namespace Orquestrator.Service
+namespace Orchestrator.Service
 {
     public class Program
     {
